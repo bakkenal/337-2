@@ -9,6 +9,34 @@ import json
 measurements = ["tablespoons", "teaspoons", "pounds", "cups", "cans", "packages", "jars", "ounces", "containers", "bushels", "tons", \
     "tablespoon", "teaspoon", "pound", "cup", "can", "package", "jar", "ounce", "container", "bushel", "ton"]
 
+# {
+#     ingredients: {
+#         groundbeef: {
+#             quantity: 
+#             measurement: 
+#             additional_instructions: 
+#             food_group:
+#         }
+#     }
+# }
+
+def createJSON(ingredients, quantities, more_directions):
+    final = {}
+    final['ingredients'] = {}
+    for idx, i in enumerate(ingredients):
+        final["ingredients"][i] = {}
+        final["ingredients"][i]['quantity'] = quantities[idx]
+        final['ingredients'][i]['additional_directions'] = more_directions[idx]
+        final["ingredients"][i]['food_group'] = 'N/A'
+
+
+    # final['ingredients'] = ingredients
+    # final['quantities'] = quantities
+    # final['directions'] = directions
+    with open('recipe.json', 'w') as f:
+        json.dump(final, f)
+
+
 def parse(url):
     # parse website url
     webpage = requests.get(url, timeout=5)
@@ -21,6 +49,7 @@ def parse(url):
         ingredients.append(element.text)
     quantities = []
     parsed_ingredients = []
+    add_direct = []
     for ingredient in ingredients:
         ingredient
         quantity = []
@@ -41,12 +70,16 @@ def parse(url):
         if "," in ingredient:
             separated = ingredient.split(",")
             ingredient = separated[0]
-            additional_directions = separated[1]
+            additional_directions = separated[1].strip()
+            add_direct.append(additional_directions)
+        else:
+            add_direct.append('N/A')
 
         check = 0
         for measurement in measurements:
             if measurement in ingredient:
                 check = 1
+
                 quantity[0] = str(quantity[0]) + " " + measurement
                 ingredient_name = ingredient.split(measurement)[1].strip()
                 parsed_ingredients.append(ingredient_name.strip())
@@ -68,4 +101,5 @@ def parse(url):
         # print(i.p.text)
         directions.append(i.p.text)
 
+    createJSON(parsed_ingredients, quantities, add_direct)
     return ingredients, quantities, directions
