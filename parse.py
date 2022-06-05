@@ -5,9 +5,31 @@ import requests
 import urllib.request
 import unicodedata
 import json
+import re
 
 measurements = ["tablespoons", "teaspoons", "pounds", "cups", "cans", "packages", "jars", "ounces", "containers", "bushels", "tons", \
     "tablespoon", "teaspoon", "pound", "cup", "can", "package", "jar", "ounce", "container", "bushel", "ton"]
+
+TIME = ['seconds', 'minutes', 'hours']
+
+ALLMETHODS = ['bake', 'sear', 'stir fry', 'sautee', 'broil', 'fry', 'scortch', 'slow cook',
+    'cook', "boil", "simmer", "grill", "grilled", 'stir in', 'stir', 'mix in', 'mix', 'chop',
+    'slice', 'flip', 'whisk', 'devein', 'julienne', 'score', 'combine', 'melt', 'punch down', 'heat',
+    'reduce', 'pour', 'skin', 'skim', 'dissolve', 'shape', 'drain', 'discard', 'blend', 'sprinkle',
+    'uncover','cover', 'drain']
+
+cooking_methods = ['stir in', 'stir', 'mix in', 'mix', 'chop',
+    'slice', 'flip', 'whisk', 'devein', 'julienne', 'score', 'combine', 'melt', 'punch down', 'heat',
+    'reduce', 'pour', 'skin', 'skim', 'dissolve', 'shape', 'drain', 'discard', 'blend', 'sprinkle',
+    'uncover','cover']
+
+
+TOOLS = ['oven', 'stove','broiler','gas grill','charcoal grill','grill',
+         'toaster','rice cooker','pressure cooker','slow cooker','fryer',
+         'blender','food processor','bowl','mixer','mandoline','spiralizer',
+         'pot','pan','baking sheet','sheet','skillet','colander','saucepan',
+         'aluminum foil','baking paper','wax paper','baking tin']
+
 
 # {
 #     ingredients: {
@@ -103,3 +125,50 @@ def parse(url):
 
     createJSON(parsed_ingredients, quantities, add_direct)
     return ingredients, quantities, directions
+
+def toolsandmethods(arr, step):
+    res = []
+    for element in arr:
+        if element in step:
+            res.append(element)
+    return res
+
+
+def parseRest(directions, ingredients):
+    rawSteps = directions #too lazy to change it 
+    TimeSteps = []
+    for step in rawSteps:
+        #parsing for the time
+        stepdict = {}
+        directions = re.sub(r'[!?\.,\'\":()]+', '', step.lower()).split()
+        steps = []
+        for interval in TIME:
+            if interval in directions: 
+                idx = [i for i, x in enumerate(directions) if x == interval]
+                for element in idx: 
+                    if directions[element-2] == 'to' or directions[element-2] == '-':
+                        speceficTimeStep =  directions[element-3] + ' ' + directions[element-2] + ' ' + directions[element-1] + ' ' + directions[element]
+                    else:
+                        speceficTimeStep = directions[element-1] + ' ' + directions[element] #no shot element gets out of bounds from list
+                    steps.append(speceficTimeStep)
+        stepdict['time'] = steps
+        
+        #parsing for the tools 
+        steptools = toolsandmethods(TOOLS, directions)
+        stepdict['tools'] = steptools
+        
+        #parsing for methods 
+        stepmethods = toolsandmethods(ALLMETHODS, directions)
+        stepdict['methods'] = stepmethods
+        
+        #parsing for ingredients 
+        ingredientmethods = toolsandmethods(ingredients, ' '.join(directions)) #have to take in a string instead of array because ingredients can be more than 2 words 
+        stepdict['ingredients'] = ingredientmethods
+        
+        #also have the actual step for that instruction
+        stepdict['direction'] = step
+        
+        TimeSteps.append(stepdict)
+    print(TimeSteps)
+    return TimeSteps
+    

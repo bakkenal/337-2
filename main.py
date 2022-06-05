@@ -1,5 +1,5 @@
 import sys
-from parse import parse
+from parse import parse, parseRest
 
 def printHelp():
     print("\n\nCS337 project - recipe parser")
@@ -30,6 +30,7 @@ url = arguments[2]
 styles = ["chinese", "italian"]
 
 ingredients, quantities, directions = parse(url)
+stepsDict = parseRest(directions, ingredients)
 
 # apply transformation
 if transform == "vegetarian":
