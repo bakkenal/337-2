@@ -42,8 +42,10 @@ TOOLS = ['oven', 'stove','broiler','gas grill','charcoal grill','grill',
 #     }
 # }
 
-def createJSON(ingredients, quantities, more_directions):
+def createJSON(ingredients, quantities, more_directions, title, rest):
     final = {}
+    final['Recipe_Title'] = title
+    final['steps'] = rest
     final['ingredients'] = {}
     for idx, i in enumerate(ingredients):
         final["ingredients"][i] = {}
@@ -58,11 +60,56 @@ def createJSON(ingredients, quantities, more_directions):
     with open('recipe.json', 'w') as f:
         json.dump(final, f)
 
+def toolsandmethods(arr, step):
+    res = []
+    for element in arr:
+        if element in step:
+            res.append(element)
+    return res
+
+def parseRest(rawSteps, ingredients):
+    TimeSteps = []
+    for step in rawSteps:
+        #parsing for the time
+        stepdict = {}
+        directions = re.sub(r'[!?\.,\'\":()]+', '', step.lower()).split()
+        steps = []
+        for interval in TIME:
+            if interval in directions: 
+                idx = [i for i, x in enumerate(directions) if x == interval]
+                for element in idx: 
+                    if directions[element-2] == 'to' or directions[element-2] == '-':
+                        speceficTimeStep =  directions[element-3] + ' ' + directions[element-2] + ' ' + directions[element-1] + ' ' + directions[element]
+                    else:
+                        speceficTimeStep = directions[element-1] + ' ' + directions[element] #no shot element gets out of bounds from list
+                    steps.append(speceficTimeStep)
+        stepdict['time'] = steps
+        
+        #parsing for the tools 
+        steptools = toolsandmethods(TOOLS, directions)
+        stepdict['tools'] = steptools
+        
+        #parsing for methods 
+        stepmethods = toolsandmethods(ALLMETHODS, directions)
+        stepdict['methods'] = stepmethods
+        
+        #parsing for ingredients 
+        ingredientmethods = toolsandmethods(ingredients, ' '.join(directions)) #have to take in a string instead of array because ingredients can be more than 2 words 
+        stepdict['ingredients'] = ingredientmethods
+        
+        #also have the actual step for that instruction
+        stepdict['direction'] = step
+        
+        TimeSteps.append(stepdict)
+    # print(TimeSteps)
+    return TimeSteps
 
 def parse(url):
     # parse website url
     webpage = requests.get(url, timeout=5)
     doc = BeautifulSoup(webpage.text, "html.parser")
+    #get title
+    title = doc.find('h1', {'class':'heading-content'}).text
 
     # get ingredients
     ingredients = []
@@ -120,55 +167,12 @@ def parse(url):
     directions = []
     instructions = doc.find_all("div", {"class": 'paragraph'})
     for i in instructions:
-        # print(i.p.text)
         directions.append(i.p.text)
 
-    createJSON(parsed_ingredients, quantities, add_direct)
+    methods_tools_time_ingredients = parseRest(directions, ingredients)
+
+    createJSON(parsed_ingredients, quantities, add_direct, title, methods_tools_time_ingredients)
+
     return ingredients, quantities, directions
 
-def toolsandmethods(arr, step):
-    res = []
-    for element in arr:
-        if element in step:
-            res.append(element)
-    return res
-
-
-def parseRest(directions, ingredients):
-    rawSteps = directions #too lazy to change it 
-    TimeSteps = []
-    for step in rawSteps:
-        #parsing for the time
-        stepdict = {}
-        directions = re.sub(r'[!?\.,\'\":()]+', '', step.lower()).split()
-        steps = []
-        for interval in TIME:
-            if interval in directions: 
-                idx = [i for i, x in enumerate(directions) if x == interval]
-                for element in idx: 
-                    if directions[element-2] == 'to' or directions[element-2] == '-':
-                        speceficTimeStep =  directions[element-3] + ' ' + directions[element-2] + ' ' + directions[element-1] + ' ' + directions[element]
-                    else:
-                        speceficTimeStep = directions[element-1] + ' ' + directions[element] #no shot element gets out of bounds from list
-                    steps.append(speceficTimeStep)
-        stepdict['time'] = steps
-        
-        #parsing for the tools 
-        steptools = toolsandmethods(TOOLS, directions)
-        stepdict['tools'] = steptools
-        
-        #parsing for methods 
-        stepmethods = toolsandmethods(ALLMETHODS, directions)
-        stepdict['methods'] = stepmethods
-        
-        #parsing for ingredients 
-        ingredientmethods = toolsandmethods(ingredients, ' '.join(directions)) #have to take in a string instead of array because ingredients can be more than 2 words 
-        stepdict['ingredients'] = ingredientmethods
-        
-        #also have the actual step for that instruction
-        stepdict['direction'] = step
-        
-        TimeSteps.append(stepdict)
-    print(TimeSteps)
-    return TimeSteps
     
