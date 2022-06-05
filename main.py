@@ -30,7 +30,7 @@ url = arguments[2]
 styles = ["chinese", "italian"]
 
 ingredients, quantities, directions = parse(url)
-stepsDict = parseRest(directions, ingredients)
+# stepsDict = parseRest(directions, ingredients)
 
 # apply transformation
 if transform == "vegetarian":
