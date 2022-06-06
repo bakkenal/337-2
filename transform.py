@@ -1,7 +1,56 @@
+import json
+meat = ['chicken', 'meat', 'beef', 'steak', 'pork', 'turkey', 'tuna', 'salmon', 'halibut', 'octopus', 'ground beef', 'veal',
+       'chorizo', 'pepperoni', 'lobster', 'shrimp', 'bacon', 'turkey bacon', 'crab', 'ham']
+
+#transform JSON 
+def transformJSON(dictionary, switch):
+    for key in switch.keys():
+        #maybe should change additional directions and quantity but who cares 
+        dictionary['ingredients'][switch[key]] = dictionary['ingredients'][key]
+    for step in dictionary['steps']:
+        for key in switch.keys():
+            if key in step['ingredients']:
+                idx = step['ingredients'].index(key)
+                step['ingredients'][idx] = switch[key]
+                new_directions = step['direction'].replace(key, switch[key])
+                step['direction'] = new_directions
+    for key in switch.keys():
+        del dictionary['ingredients'][key]
+
+    dictionary['Recipe_Title'] = 'Vegetarian ' + dictionary['Recipe_Title']
+    return dictionary
+
+def storeJSON(dictionary, str):
+    with open(f'{str} recipe.json', 'w') as f:
+        json.dump(dictionary, f)
 
 
-def to_vegetarian():
-    pass
+def to_vegetarian(I, J): #might not take in url as variable
+    vegetarian_ingredients = []
+    switch_ingredients = {}
+    for i in I:
+        i = i.lower()
+        ingredient_has_meat = False
+        for m in meat:
+            #if there is a protein 
+            if m in i:
+                ingredient_has_meat = True
+                #check if it is a soup 
+                if 'stew' in i or 'broth' in i or 'stock' in i:
+                    new = 'vegetable stock'
+                    vegetarian_ingredients.append(new)
+                    switch_ingredients[i] = new
+                #not it is not a soup
+                else:
+                    new = 'tofu'
+                    vegetarian_ingredients.append(new)
+                    switch_ingredients[i] = new
+                break #break because of the edge condition beef stew meat so it looped twice becuz of 'beef' and 'meat' 
+        if ingredient_has_meat == False:
+            vegetarian_ingredients.append(i)
+    vegetarian = transformJSON(J, switch_ingredients) #this actually changes the original json so theres no deep copy 
+    storeJSON(vegetarian, 'Transformed vegetarian')
+    print(vegetarian)
 
 def from_vegetarian():
     pass

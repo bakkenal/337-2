@@ -55,6 +55,8 @@ def createJSON(ingredients, quantities, more_directions, title, rest):
 
     with open('recipe.json', 'w') as f:
         json.dump(final, f)
+        
+    return final 
 
 def toolsandmethods(arr, step):
     res = []
@@ -148,8 +150,8 @@ def parse(url):
                 quantity[0] = str(quantity[0]) + " " + measurement
                 ingredient_name = ingredient.split(measurement)[1].strip()
                 parsed_ingredients.append(ingredient_name.strip())
-                print(quantity[0])
-                print(ingredient_name)
+                # print(quantity[0])
+                # print(ingredient_name)
                 break
         if not check:
             parsed_ingredients.append(ingredient.strip())
@@ -165,8 +167,8 @@ def parse(url):
     for i in instructions:
         directions.append(i.p.text)
     methods_tools_time_ingredients = parseRest(directions, parsed_ingredients)
-    createJSON(parsed_ingredients, quantities, add_direct, title, methods_tools_time_ingredients)
+    j = createJSON(parsed_ingredients, quantities, add_direct, title, methods_tools_time_ingredients)
 
-    return ingredients, quantities, directions
+    return parsed_ingredients, quantities, directions, j
 
     
