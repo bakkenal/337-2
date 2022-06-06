@@ -12,11 +12,14 @@ measurements = ["tablespoons", "teaspoons", "pounds", "cups", "cans", "packages"
 
 TIME = ['seconds', 'minutes', 'hours']
 
-ALLMETHODS = ['bake', 'sear', 'stir fry', 'sautee', 'broil', 'fry', 'scorch', 'slow cook',
-    'cook', "boil", "simmer", "grill", "grilled", 'stir in', 'stir', 'mix in', 'mix', 'chop',
+ALLMETHODS = ['bake', 'sear', 'stir fry', 'sautee', 'broil', "saute", 'fry', 'scorch', 'slow cook',
+    'cook', "boil", "simmer", "grill", "grilled", "roast", "deep fry", 'stir in', 'stir', 'mix in', 'mix', 'chop',
     'slice', 'flip', 'whisk', 'devein', 'julienne', 'score', 'combine', 'melt', 'punch down', 'heat',
     'reduce', 'pour', 'skin', 'skim', 'dissolve', 'shape', 'drain', 'discard', 'blend', 'sprinkle',
     'uncover','cover', 'drain']
+
+primary_methods = ['bake', 'sear', 'stir fry', 'sautee', "saute", 'broil', 'fry', 'scorch', 'slow cook',
+    'cook', "boil", "simmer", "grill", "grilled", "roast", "deep fry"]
 
 cooking_methods = ['stir in', 'stir', 'mix in', 'mix', 'chop',
     'slice', 'flip', 'whisk', 'devein', 'julienne', 'score', 'combine', 'melt', 'punch down', 'heat',
@@ -90,6 +93,8 @@ def parseRest(rawSteps, ingredients):
         #parsing for methods 
         stepmethods = toolsandmethods(ALLMETHODS, directions)
         stepdict['methods'] = stepmethods
+
+        stepdict['primary_method'] = toolsandmethods(primary_methods, directions)
         
         #parsing for ingredients 
         ingredientmethods = toolsandmethods(ingredients, ' '.join(directions)) #have to take in a string instead of array because ingredients can be more than 2 words 
