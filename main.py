@@ -54,7 +54,6 @@ elif transform == "style":
 elif transform == "optionals":
     print("TODO: determine these")
     pass
-else:
-    printHelp()
+printHelp()
 
 

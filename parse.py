@@ -12,7 +12,7 @@ measurements = ["tablespoons", "teaspoons", "pounds", "cups", "cans", "packages"
 
 TIME = ['seconds', 'minutes', 'hours']
 
-ALLMETHODS = ['bake', 'sear', 'stir fry', 'sautee', 'broil', 'fry', 'scortch', 'slow cook',
+ALLMETHODS = ['bake', 'sear', 'stir fry', 'sautee', 'broil', 'fry', 'scorch', 'slow cook',
     'cook', "boil", "simmer", "grill", "grilled", 'stir in', 'stir', 'mix in', 'mix', 'chop',
     'slice', 'flip', 'whisk', 'devein', 'julienne', 'score', 'combine', 'melt', 'punch down', 'heat',
     'reduce', 'pour', 'skin', 'skim', 'dissolve', 'shape', 'drain', 'discard', 'blend', 'sprinkle',
