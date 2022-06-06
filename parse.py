@@ -53,10 +53,6 @@ def createJSON(ingredients, quantities, more_directions, title, rest):
         final['ingredients'][i]['additional_directions'] = more_directions[idx]
         final["ingredients"][i]['food_group'] = 'N/A'
 
-
-    # final['ingredients'] = ingredients
-    # final['quantities'] = quantities
-    # final['directions'] = directions
     with open('recipe.json', 'w') as f:
         json.dump(final, f)
 
