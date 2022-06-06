@@ -160,17 +160,15 @@ def parse(url):
         
         quantities.append(quantity)
 
-    print(parsed_ingredients)
-    print(quantities)
+    # print(parsed_ingredients)
+    # print(quantities)
 
     # get directions
     directions = []
     instructions = doc.find_all("div", {"class": 'paragraph'})
     for i in instructions:
         directions.append(i.p.text)
-
-    methods_tools_time_ingredients = parseRest(directions, ingredients)
-
+    methods_tools_time_ingredients = parseRest(directions, parsed_ingredients)
     createJSON(parsed_ingredients, quantities, add_direct, title, methods_tools_time_ingredients)
 
     return ingredients, quantities, directions
