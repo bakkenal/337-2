@@ -1,6 +1,6 @@
 import sys
 from parse import parse, parseRest
-from transform import to_vegetarian
+from transform import from_vegetarian, to_vegetarian
 
 def printHelp():
     print("\n\nCS337 project - recipe parser")
@@ -37,6 +37,7 @@ ingredients, quantities, directions, json = parse(url)
 if transform == "vegetarian":
     if mode == "from":
         print("making " + url + " have meat")
+        from_vegetarian(ingredients, json)
     if mode == "to":
         print("making " + url + " be vegetarian")
         to_vegetarian(ingredients, json)
