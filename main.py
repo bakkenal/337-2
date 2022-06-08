@@ -7,12 +7,13 @@ def printHelp():
     print("Input 1 - transformation. Options are: \n\
             vegetarian\n\
             healthy\n\
-            style - Chinese\n\
-Input 2 - to or from the transformation\n\
+            quantity\n\
+            style - chinese, indian\n\
+Input 2 - to or from the transformation but in the case of 'quantity' transformation add double as the 2nd input\n\
 Input 3 - the url to be transformed\n\n\
-An example input could be \"python script.py vegetarian to [url]\"\n\
+An example input could be \"python main.py vegetarian to [url]\"\n\
 Since some modes, like style, transform to a url, use the cuisine instead of \"to\" or \"from\".\
-For example - \"python script.py style chinese [url]\"\n\n")
+For example - \"python main.py style chinese [url]\"\n\n")
     quit()
 
 if len(sys.argv) != 4:
