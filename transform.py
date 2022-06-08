@@ -155,7 +155,10 @@ def from_healthy(J):
 
 def to_chinese(ingredient, J):
     if 'soy sauce' not in ingredient:
+        J['ingredients']['soy sauce'] = {}
         J['ingredients']['soy sauce']['quantity'] = 'N/A'
+        J['ingredients']['soy sauce']['additional_directions'] = 'N/A'
+        J['ingredients']['soy sauce']['food_group'] = 'N/A'
         step = {
             'time':[],
             'tools':[],
@@ -171,7 +174,10 @@ def to_chinese(ingredient, J):
         
 def to_indian(ingredient, J):
     if 'curry' not in ingredient:
-        J['ingredients']['soy sauce']['quantity'] = 'N/A'
+        J['ingredients']['curry'] = {}
+        J['ingredients']['curry']['quantity'] = 'N/A'
+        J['ingredients']['curry']['additional_directions'] = 'N/A'
+        J['ingredients']['curry']['food_group'] = 'N/A'
         step = {
             'time':[],
             'tools':[],
