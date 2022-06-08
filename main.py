@@ -1,6 +1,6 @@
 import sys
 from parse import parse, parseRest
-from transform import from_vegetarian, to_vegetarian, from_healthy, to_healthy, to_chinese
+from transform import doubleQuantity, from_vegetarian, to_vegetarian, from_healthy, to_healthy, to_chinese
 
 def printHelp():
     print("\n\nCS337 project - recipe parser")
@@ -56,6 +56,10 @@ elif transform == "style":
             # something
             to_chinese(ingredients, json)
     pass
+elif transform == 'quantity':
+    if mode == 'double':
+        print("making " + url + " double the quantity")
+        doubleQuantity(json)
 else:
     printHelp()
 

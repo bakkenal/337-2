@@ -170,5 +170,27 @@ def to_chinese(ingredient, J):
     else:
         print("THIS DISH IS ALREADY CHINESE")
 
+def doubleQuantity(J):
+    for ingredient in J['ingredients']:
+        new_quantity = []
+        for q in J['ingredients'][ingredient]['quantity']:
+            if type(q) == int or type(q) == float:
+                new_quantity.append(q*2)
+            elif type(q) == str:
+                if isfloat(q.split()[0]):
+                    num = float(q.split()[0])
+                    changed = str(num*2) + ' ' + ' '.join(q.split()[1:])
+                    new_quantity.append(changed)
+        J['ingredients'][ingredient]['quantity'] = new_quantity
+    storeJSON(J, "Double")
+    prettyPrint(J)
+
 def prettyPrint(input):
     pprint.pprint(input)
+
+def isfloat(num):
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
