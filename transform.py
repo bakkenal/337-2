@@ -9,14 +9,29 @@ primary_methods = ['bake', 'sear', 'stir fry', 'sautee', "saute", 'broil', 'fry'
 healthy_map = { "fry" : "bake",
                 "deep fry" : "bake",
                 "roast" : "bake",
-                "boil" : "steam"}
+                "boil" : "steam",
+                "bake" : "boil", 
+                "Fry" : "Bake",
+                "Deep fry" : "Bake",
+                "Roast" : "Bake",
+                "Boil" : "Steam",
+                "Bake" : "Boil"}
 unhealth_map = {"bake" : "fry",
                 "sear" : "fry",
                 "stir fry" : "fry",
                 "sautee" : "fry",
                 "saute" : "fry",
                 "boil" : "fry",
-                "steam" : "fry"}
+                "broil" : "fry",
+                "steam" : "fry", 
+                "Bake" : "Fry",
+                "Sear" : "Fry",
+                "Stir fry" : "Fry",
+                "Sautee" : "Fry",
+                "Saute" : "Fry",
+                "Boil" : "Fry",
+                "Steam" : "Fry",
+                "Broil" : "Fry"}
 
 #transform JSON 
 def transformJSON(dictionary, switch):
@@ -100,10 +115,43 @@ def from_vegetarian(ingredient, J):
 
 def to_healthy(J):
     # go through step by step and replace with mapped method in dicts
-    pass
+    for step in J['steps']:
+        print(step)
+        for i, method in enumerate(step['methods']):
+            if method in healthy_map:
+                step['methods'][i] = healthy_map[method]
+        for i, method in enumerate(step['primary_method']):
+            if method in healthy_map:
+                step['primary_method'][i] = healthy_map[method]
+        direction = step['direction'].split(" ")
+        #print(direction)
+        for i, word in enumerate(direction):
+            if word in healthy_map:
+                direction[i] = healthy_map[word]
+        new_thing = ' '.join(direction)
+        step['direction'] = new_thing
+        #print(step['direction'])
+    storeJSON(J, "Healthy")
+    prettyPrint(J)
+
 
 def from_healthy(J):
-    pass
+    for step in J['steps']:
+        for i, method in enumerate(step['methods']):
+            if method in unhealth_map:
+                step['methods'][i] = unhealth_map[method]
+        for i, method in enumerate(step['primary_method']):
+            if method in unhealth_map:
+                step['primary_method'][i] = unhealth_map[method]
+        direction = step['direction'].split(" ")
+        #print(direction)
+        for i, word in enumerate(direction):
+            if word in unhealth_map:
+                direction[i] = unhealth_map[word]
+        new_thing = ' '.join(direction)
+        step['direction'] = new_thing
+    storeJSON(J, "Unhealthy")
+    prettyPrint(J)
 
 def to_chinese(ingredient, J):
     if 'soy sauce' not in ingredient:
