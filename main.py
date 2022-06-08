@@ -27,7 +27,7 @@ transform = arguments[0]
 mode = arguments[1]
 url = arguments[2]
 
-styles = ["chinese"]
+styles = ["chinese","indian"]
 
 ingredients, quantities, directions, json = parse(url)
 # stepsDict = parseRest(directions, ingredients)
@@ -54,7 +54,10 @@ elif transform == "style":
         if mode == style:
             print("making " + url + " " + style)
             # something
-            to_chinese(ingredients, json)
+            if mode=="chinese":
+                to_chinese(ingredients, json)
+            elif mode="indian":
+                to_indian(ingredients, json)
     pass
 elif transform == 'quantity':
     if mode == 'double':

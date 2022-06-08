@@ -156,7 +156,6 @@ def from_healthy(J):
 def to_chinese(ingredient, J):
     if 'soy sauce' not in ingredient:
         J['ingredients']['soy sauce']['quantity'] = 'N/A'
-        J['ingredients']['bacon']['food_group'] = 'N/A'
         step = {
             'time':[],
             'tools':[],
@@ -169,6 +168,22 @@ def to_chinese(ingredient, J):
         prettyPrint(J)
     else:
         print("THIS DISH IS ALREADY CHINESE")
+        
+def to_indian(ingredient, J):
+    if 'curry' not in ingredient:
+        J['ingredients']['soy sauce']['quantity'] = 'N/A'
+        step = {
+            'time':[],
+            'tools':[],
+            'methods':[],
+            'ingredients':['curry'],
+            'direction': 'Sprinkle on curry to taste'
+        }
+        J['steps'].append(step)
+        storeJSON(J, "Indian")
+        prettyPrint(J)
+    else:
+        print("THIS DISH IS ALREADY INDIAN")
 
 def doubleQuantity(J):
     for ingredient in J['ingredients']:
