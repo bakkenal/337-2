@@ -19,7 +19,7 @@ ALLMETHODS = ['bake', 'sear', 'stir fry', 'sautee', 'broil', "saute", 'fry', 'sc
     'uncover','cover', 'drain']
 
 primary_methods = ['bake', 'sear', 'stir fry', 'sautee', "saute", 'broil', 'fry', 'scorch', 'slow cook',
-    'cook', "boil", "simmer", "grill", "grilled", "roast", "deep fry"]
+    'cook', "boil", "simmer", "grill", "grilled", "roast", "deep fry", "steam"]
 
 cooking_methods = ['stir in', 'stir', 'mix in', 'mix', 'chop',
     'slice', 'flip', 'whisk', 'devein', 'julienne', 'score', 'combine', 'melt', 'punch down', 'heat',

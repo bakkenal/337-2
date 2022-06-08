@@ -1,6 +1,22 @@
 import json
+import pprint
 meat = ['chicken', 'meat', 'beef', 'steak', 'pork', 'turkey', 'tuna', 'salmon', 'halibut', 'octopus', 'ground beef', 'veal',
        'chorizo', 'pepperoni', 'lobster', 'shrimp', 'bacon', 'turkey bacon', 'crab', 'ham']
+
+primary_methods = ['bake', 'sear', 'stir fry', 'sautee', "saute", 'broil', 'fry', 'scorch', 'slow cook',
+    'cook', "boil", "simmer", "grill", "grilled", "roast", "deep fry", "steam"]
+
+healthy_map = { "fry" : "bake",
+                "deep fry" : "bake",
+                "roast" : "bake",
+                "boil" : "steam"}
+unhealth_map = {"bake" : "fry",
+                "sear" : "fry",
+                "stir fry" : "fry",
+                "sautee" : "fry",
+                "saute" : "fry",
+                "boil" : "fry",
+                "steam" : "fry"}
 
 #transform JSON 
 def transformJSON(dictionary, switch):
@@ -51,7 +67,7 @@ def to_vegetarian(I, J): #might not take in url as variable
     if switch_ingredients:
         vegetarian = transformJSON(J, switch_ingredients) #this actually changes the original json so theres no deep copy 
         storeJSON(vegetarian, 'Transformed vegetarian')
-        print(vegetarian)
+        prettyPrint(vegetarian)
     else:
         print('THIS RECIPE IS ALREADY VEGETARIAN!!!')
 
@@ -80,19 +96,31 @@ def from_vegetarian(ingredient, J):
         }
         J['steps'].append(step)
         storeJSON(J, 'Non-vegetarian')
-        print(J)
+        prettyPrint(J)
 
-def to_healthy():
+def to_healthy(J):
+    # go through step by step and replace with mapped method in dicts
     pass
 
-def from_healthy():
+def from_healthy(J):
     pass
 
-def to_chinese():
-    pass
+def to_chinese(ingredient, J):
+    if 'soy sauce' not in ingredient:
+        J['ingredients']['soy sauce']['quantity'] = 'N/A'
+        J['ingredients']['bacon']['food_group'] = 'N/A'
+        step = {
+            'time':[],
+            'tools':[],
+            'methods':[],
+            'ingredients':['soy sauce'],
+            'direction': 'Sprinkle on soy sauce to taste'
+        }
+        J['steps'].append(step)
+        storeJSON(J, "Chinese")
+        prettyPrint(J)
+    else:
+        print("THIS DISH IS ALREADY CHINESE")
 
-def double_quantity():
-    pass
-
-def half_quantity():
-    pass
+def prettyPrint(input):
+    pprint.pprint(input)

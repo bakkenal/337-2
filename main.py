@@ -1,14 +1,13 @@
 import sys
 from parse import parse, parseRest
-from transform import from_vegetarian, to_vegetarian
+from transform import from_vegetarian, to_vegetarian, from_healthy, to_healthy, to_chinese
 
 def printHelp():
     print("\n\nCS337 project - recipe parser")
     print("Input 1 - transformation. Options are: \n\
             vegetarian\n\
             healthy\n\
-            style - Italian or Chinese\n\
-            optionals - \n\n\
+            style - Chinese\n\
 Input 2 - to or from the transformation\n\
 Input 3 - the url to be transformed\n\n\
 An example input could be \"python script.py vegetarian to [url]\"\n\
@@ -28,7 +27,7 @@ transform = arguments[0]
 mode = arguments[1]
 url = arguments[2]
 
-styles = ["chinese", "italian"]
+styles = ["chinese"]
 
 ingredients, quantities, directions, json = parse(url)
 # stepsDict = parseRest(directions, ingredients)
@@ -45,17 +44,17 @@ if transform == "vegetarian":
 elif transform == "healthy":
     if mode == "from":
         print("making " + url + " more unhealthy")
+        from_healthy(json)
     if mode == "to":
         print("making " + url + " more healthy")
+        to_healthy(json)
     pass
 elif transform == "style":
     for style in styles:
         if mode == style:
             print("making " + url + " " + style)
             # something
-    pass
-elif transform == "optionals":
-    print("TODO: determine these")
+            to_chinese(ingredients, json)
     pass
 else:
     printHelp()
